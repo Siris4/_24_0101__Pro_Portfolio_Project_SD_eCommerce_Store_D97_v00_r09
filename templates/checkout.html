@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <!-- Apply the checkout-page class for centering and width -->
+    <div class="checkout-page">
+        <h2>Checkout</h2>
+        <p>You're purchasing: {{ product.name }}</p>
+        <!-- Format price with two decimal places -->
+        <p>Total: ${{ '%.2f' % (product.price / 100) }}</p>
+
+        <!-- Stripe Elements Placeholder -->
+        <form id="payment-form" class="payment-form">
+            <div class="stripe-input">
+                <div id="card-element" class="card-element">
+                    <!-- A Stripe Element will be inserted here for the card number. -->
+                </div>
+                <div>
+                    <!-- Stripe will auto-insert the expiry date, CVC, and ZIP here -->
+                </div>
+            </div>
+            <button id="submit" class="submit-payment-button">Submit Payment</button>
+        </form>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Use your actual test publishable key here
+        var stripe = Stripe('pk_test_51Q7nczCS2bbJJyRZGxuPyBD2ndH9vZlgWI54lP3lPCKGQXGEfuL98tpKw70GACnb62FkAkfRUPBVqncQ959m77gQ00wpGJtwcK');  // Replace with your actual pk_test key
+
+        // Create an instance of Elements
+        var elements = stripe.elements();
+
+        // Create an instance of the card Element
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        // Handle form submission
+        var form = document.getElementById('payment-form');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.confirmCardPayment("{{ client_secret }}", {
+                payment_method: {
+                    card: card
+                }
+            }).then(function(result) {
+                if (result.error) {
+                    // Display error message to the user
+                    alert(result.error.message);
+                } else {
+                    // Payment successful
+                    alert('Payment successful!');
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h2>Welcome to the Siris Dynamics Shop</h2>
+
+    <!-- Display each product in a grid with image and view button -->
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product">
+            <h3>{{ product.name }}</h3>
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" style="max-width: 100%; height: auto;">
+            <p>{{ product.description }}</p>
+            <p>Price: ${{ '%.2f' % (product.price / 100) }}</p>
+            <a href="/product/{{ product.id }}" class="view-product-button">View Product</a>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

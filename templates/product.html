@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="product-detail">
+        <h2>{{ product.name }}</h2>
+        <!-- Add the product image -->
+        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" style="max-width: 100%; height: auto;">
+
+        <p>{{ product.description }}</p>
+
+        <!-- Format the price to display with two decimal places -->
+        <p>Price: ${{ '%.2f' % (product.price / 100) }}</p>
+
+        <form action="/checkout" method="POST">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+
+            <!-- Make the button green with updated style for the "Buy Now" button -->
+            <button type="submit" class="buy-now-button">Buy Now</button>
+        </form>
+    </div>
+{% endblock %}
